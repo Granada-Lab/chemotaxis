@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useEffect, useRef, useCallback } from 'react';
 import {
   Dna, Settings, Play, Pause, RefreshCcw,
-  Activity as ActivityIcon, Calculator, Microscope, Network, Waves, MapPin, Info, CodeXml,
+  Activity as ActivityIcon, Calculator, Microscope, Network, Waves, MapPin, Info, CodeXml, Home,
 } from 'lucide-react';
 import { useChemotaxisModel } from '../hooks/useChemotaxisModel';
 import { INITIAL_PARAMS, SimulationParams, M_MAX, GAMMA } from '../types';
@@ -240,6 +240,10 @@ export default function Dashboard() {
             {isPlaying ? <Pause size={13} /> : <Play size={13} />}
             {isPlaying ? 'Pause' : 'Resume'}
           </button>
+          <a href="https://granada-lab.github.io/" title="Granada Lab home"
+            className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider opacity-50 hover:opacity-100 transition-opacity">
+            <Home size={13} />Granada Lab
+          </a>
           <a href="https://github.com/Granada-Lab/chemotaxis" target="_blank" rel="noopener noreferrer"
             title="Source code on GitHub"
             className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider opacity-50 hover:opacity-100 transition-opacity">
@@ -528,7 +532,7 @@ export default function Dashboard() {
                     <span className="text-orange-700 font-bold">TUMBLE (CW)</span>
                   </span>
                   <span className="border-l-2 border-black/40 pl-4 text-[9.6px] font-black uppercase tracking-[0.18em] text-black/85">
-                    <a href="https://github.com/Granada-Lab" target="_blank" rel="noopener noreferrer" className="hover:underline">Adrián E. Granada · Granada Lab</a> | Version 1.2
+                    Adrián E. Granada · <a href="https://granada-lab.github.io/" className="hover:underline">Granada Lab</a> · <a href="https://granadalab.org" target="_blank" rel="noopener noreferrer" className="hover:underline">granadalab.org</a> | Version 1.3
                   </span>
                 </div>
               </div>
@@ -869,7 +873,7 @@ function SimulationDetailsView() {
         <p className="mt-8 text-[11px] leading-relaxed text-black/55">
           Model, teaching design and parameter choices: Adrián E. Granada. The interface code was written with the help of AI
           coding assistants (Google AI Studio, Claude), then reviewed and tested by the author. Source code and architecture
-          notes: <a href="https://github.com/Granada-Lab/chemotaxis" target="_blank" rel="noopener noreferrer" className="underline">github.com/Granada-Lab/chemotaxis</a>.
+          notes: <a href="https://github.com/Granada-Lab/chemotaxis" target="_blank" rel="noopener noreferrer" className="underline">github.com/Granada-Lab/chemotaxis</a>. More from the group: <a href="https://granada-lab.github.io/" className="underline">granada-lab.github.io</a> · <a href="https://granadalab.org" target="_blank" rel="noopener noreferrer" className="underline">granadalab.org</a>.
         </p>
       </div>
     </div>

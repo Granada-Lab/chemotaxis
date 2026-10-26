@@ -63,4 +63,4 @@ npm run build    # static site in dist/
 
 MIT. If you use it in teaching, a citation is appreciated (see `CITATION.cff`).
 
-Author: Adrián E. Granada · more code from the group: [github.com/Granada-Lab](https://github.com/Granada-Lab)
+Author: Adrián E. Granada · more from the group: [granada-lab.github.io](https://granada-lab.github.io/) · [granadalab.org](https://granadalab.org) · [github.com/Granada-Lab](https://github.com/Granada-Lab)
