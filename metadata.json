@@ -1,0 +1,7 @@
+{
+  "name": "Teaching Bacterial Chemotaxis",
+  "description": "Interactive lecture simulator for E. coli chemotaxis — signal transduction, run-and-tumble dynamics, and exact adaptation (Tu, Shimizu & Berg 2008). Designed for teaching.",
+  "version": "1.0.0",
+  "requestFramePermissions": [],
+  "majorCapabilities": []
+}
