@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useEffect, useRef, useCallback } from 'react';
 import {
   Dna, Settings, Play, Pause, RefreshCcw,
-  Activity as ActivityIcon, Calculator, Microscope, Network, Waves, MapPin, Info,
+  Activity as ActivityIcon, Calculator, Microscope, Network, Waves, MapPin, Info, CodeXml,
 } from 'lucide-react';
 import { useChemotaxisModel } from '../hooks/useChemotaxisModel';
 import { INITIAL_PARAMS, SimulationParams, M_MAX, GAMMA } from '../types';
@@ -240,6 +240,11 @@ export default function Dashboard() {
             {isPlaying ? <Pause size={13} /> : <Play size={13} />}
             {isPlaying ? 'Pause' : 'Resume'}
           </button>
+          <a href="https://github.com/Granada-Lab/chemotaxis" target="_blank" rel="noopener noreferrer"
+            title="Source code on GitHub"
+            className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider opacity-50 hover:opacity-100 transition-opacity">
+            <CodeXml size={13} />Code
+          </a>
           <button onClick={resetAll} title="Reset simulation and parameters" className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider opacity-50 hover:opacity-100 transition-opacity">
             <RefreshCcw size={13} />Reset
           </button>
@@ -523,7 +528,7 @@ export default function Dashboard() {
                     <span className="text-orange-700 font-bold">TUMBLE (CW)</span>
                   </span>
                   <span className="border-l-2 border-black/40 pl-4 text-[9.6px] font-black uppercase tracking-[0.18em] text-black/85">
-                    Adrián E. Granada | Version 1.2
+                    <a href="https://github.com/Granada-Lab" target="_blank" rel="noopener noreferrer" className="hover:underline">Adrián E. Granada · Granada Lab</a> | Version 1.2
                   </span>
                 </div>
               </div>
