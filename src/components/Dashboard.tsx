@@ -523,7 +523,7 @@ export default function Dashboard() {
                     <span className="text-orange-700 font-bold">TUMBLE (CW)</span>
                   </span>
                   <span className="border-l-2 border-black/40 pl-4 text-[9.6px] font-black uppercase tracking-[0.18em] text-black/85">
-                    Adrián E. Granada | Version 1.1
+                    Adrián E. Granada | Version 1.2
                   </span>
                 </div>
               </div>
@@ -852,14 +852,20 @@ function SimulationDetailsView() {
         </div>
 
         <div className="border-2 border-[#141414] bg-[#141414] text-[#f5f2eb] p-5 font-mono text-[12px] leading-relaxed">
-          <p>`S = S_basal + S_uniform + S_gradient + S_source`</p>
-          <p>`a = 1 / (1 + (S / K)^n)`</p>
-          <p>`K(m) = K0 exp(gamma m)`</p>
-          <p>`dm/dt = VR - VB (beta a + (1 - beta))`</p>
-          <p>`a_st = VR / VB`</p>
-          <p>`lambda_tumble ~= (a / a_st) * temporal_bias`</p>
-          <p>`P(tumble in dt) = lambda_tumble * dt`</p>
+          <p>S = S_basal + S_uniform + S_gradient + S_source</p>
+          <p>a = 1 / (1 + (S / K)^n)</p>
+          <p>K(m) = K0 exp(gamma m)</p>
+          <p>dm/dt = VR - VB (beta a + (1 - beta))</p>
+          <p>a_st = VR / VB</p>
+          <p>lambda_tumble ~= (a / a_st) * temporal_bias</p>
+          <p>P(tumble in dt) = lambda_tumble * dt</p>
         </div>
+
+        <p className="mt-8 text-[11px] leading-relaxed text-black/55">
+          Model, teaching design and parameter choices: Adrián E. Granada. The interface code was written with the help of AI
+          coding assistants (Google AI Studio, Claude), then reviewed and tested by the author. Source code and architecture
+          notes: <a href="https://github.com/Granada-Lab/chemotaxis" target="_blank" rel="noopener noreferrer" className="underline">github.com/Granada-Lab/chemotaxis</a>.
+        </p>
       </div>
     </div>
   );
