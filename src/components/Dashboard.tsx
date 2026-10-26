@@ -6,6 +6,8 @@ import {
 import { useChemotaxisModel } from '../hooks/useChemotaxisModel';
 import { INITIAL_PARAMS, SimulationParams, M_MAX, GAMMA } from '../types';
 import { LineChart, Line, YAxis, ResponsiveContainer, ReferenceLine } from 'recharts';
+import katex from 'katex';
+import 'katex/dist/katex.min.css';
 
 const SIM_W = 800;
 const SIM_H = 400;
@@ -26,6 +28,16 @@ export default function Dashboard() {
   paramsRef.current = params;
 
   useEffect(() => { selectedIdRef.current = selectedId; }, [selectedId, selectedIdRef]);
+
+  // Full reset: restore initial parameters, clear source and selection, then re-create the cells
+  // in an effect so the model sees the restored parameters
+  const [resetToken, setResetToken] = useState(0);
+  const resetAll = useCallback(() => {
+    setParams(INITIAL_PARAMS);
+    setSelectedId(null);
+    setResetToken(t => t + 1);
+  }, []);
+  useEffect(() => { if (resetToken > 0) reset(); }, [resetToken, reset]);
 
   const selected = useMemo(
     () => bacteria.find(b => b.id === selectedId) ?? bacteria[0],
@@ -169,7 +181,7 @@ export default function Dashboard() {
 
     render();
     return () => cancelAnimationFrame(rafId);
-  }, [bacteriaRef, isPlaying, selectedIdRef]);
+  }, [bacteriaRef, isPlaying, selectedIdRef, activeTab]);
 
   // Derived display values
   const a_st = params.cheRRate / params.cheBRate;
@@ -228,8 +240,8 @@ export default function Dashboard() {
             {isPlaying ? <Pause size={13} /> : <Play size={13} />}
             {isPlaying ? 'Pause' : 'Resume'}
           </button>
-          <button onClick={reset} title="Reset bacteria" className="opacity-35 hover:opacity-100 transition-opacity">
-            <RefreshCcw size={14} />
+          <button onClick={resetAll} title="Reset simulation and parameters" className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider opacity-50 hover:opacity-100 transition-opacity">
+            <RefreshCcw size={13} />Reset
           </button>
         </div>
       </header>
@@ -511,7 +523,7 @@ export default function Dashboard() {
                     <span className="text-orange-700 font-bold">TUMBLE (CW)</span>
                   </span>
                   <span className="border-l-2 border-black/40 pl-4 text-[9.6px] font-black uppercase tracking-[0.18em] text-black/85">
-                    Adrián E. Granada | Version 1.0
+                    Adrián E. Granada | Version 1.1
                   </span>
                 </div>
               </div>
@@ -603,34 +615,39 @@ function EquationView({ a_st, tau }: { a_st: number; tau: number }) {
   const equations = [
     {
       num: '1', title: 'Receptor Activity (Hill Function)',
-      eq: 'a  =  1 / [1 + (S/K)ⁿ]',
+      eq: String.raw`a = \frac{1}{1 + \left( S / K(m) \right)^{n}}`,
       note: 'S = local attractant conc.; K = receptor binding threshold (tuned by methylation m); n = Hill coefficient (receptor cluster cooperativity, n ≈ 6). Attractant binding INACTIVATES receptors: high S → low a.',
     },
     {
       num: '2', title: 'Methylation–Binding Constant Relationship',
-      eq: 'K(m)  =  K₀ · e^(γm)',
+      eq: String.raw`K(m) = K_0 \, e^{\gamma m}`,
       note: 'Each methyl group (CH₃) added by CheR contributes free energy γ, multiplicatively raising K. Higher K shifts the Hill curve rightward → receptor insensitive to current [S] → activity rises back. This is the memory variable of the system.',
     },
     {
       num: '3', title: 'Barkai-Leibler Methylation Dynamics  [Alon eq. 9.4.1]',
-      eq: 'dm/dt  =  V_R·R  −  V_B·B·X*',
+      eq: String.raw`\frac{dm}{dt} = V_R R \;-\; V_B B \, X^{*}`,
       dark: true,
       note: 'CheR (R) adds methyls at a CONSTANT zero-order rate V_R·R — it is saturated, so it doesn\'t "know" current activity. CheB (B) removes methyls ONLY from ACTIVE receptors X* (active conformation exposes methyl groups). This selectivity of B for X* is the structural key to robustness.',
     },
     {
       num: '4', title: 'Steady State — Exact Adaptation',
-      eq: 'a_st  =  V_R·R / (V_B·B)  [independent of S!]',
+      eq: String.raw`a_{st} = \frac{V_R R}{V_B B} \qquad \text{(independent of } S\text{)}`,
       note: `At dm/dt = 0: a must equal V_R/V_B regardless of background attractant [S]. This is why adaptation is exact. With current parameters: a_st = ${a_st.toFixed(3)}. Changing V_R or V_B shifts the baseline but does NOT break exactness — the system adapts to its new setpoint.`,
     },
     {
       num: '5', title: 'CheB Selectivity — The Robustness Parameter (β)',
-      eq: 'dm/dt  =  V_R  −  V_B·(β·a + (1−β)·1)',
+      eq: String.raw`\frac{dm}{dt} = V_R - V_B \left( \beta\, a + (1-\beta) \right)`,
       note: 'β=1: CheB acts ONLY on active receptors → integral feedback → robust exact adaptation for ANY V_R, V_B. β=0: CheB acts on ALL receptors equally → dm/dt = V_R − V_B = const → m drifts to boundary → adaptation fails. Intermediate β: partial adaptation (returns toward a_st but imprecisely).',
     },
     {
       num: '6', title: 'Motor Output',
-      eq: 'λ_tumble  ∝  a / a_st',
+      eq: String.raw`\lambda_{\text{tumble}} \propto \frac{a}{a_{st}}`,
       note: `CheY-P tracks receptor activity a. High a → more CheY-P → CW motor → tumble. Swimming up-gradient transiently suppresses a below a_st → run bias → directed migration. Adaptation time τ ≈ 1/(V_B·γ) = ${tau.toFixed(1)} s.`,
+    },
+    {
+      num: '7', title: 'Tumble Rate As Implemented (Teaching Simplification)',
+      eq: String.raw`\lambda = \max\!\left(0.02,\; \frac{a}{a_{st}}\, g\right), \quad g = \max\!\left(0.04,\; 1 - 4.5\,\sigma \frac{\dot S}{S + 0.5}\right)`,
+      note: 'In the simulation the motor rate a/a_st is multiplied by a temporal-sensing factor g: a rising signal (Ṡ > 0) suppresses tumbles directly. σ = +1 for an attractant and −1 for a repellent. This shortcut makes chemotaxis visible on lecture timescales; in the full model of Tu, Shimizu & Berg (2008) the run bias arises from receptor activity alone.',
     },
   ] as { num: string; title: string; eq: string; note: string; dark?: boolean }[];
 
@@ -648,10 +665,10 @@ function EquationView({ a_st, tau }: { a_st: number; tau: number }) {
           {equations.map(({ num, title, eq, note, dark }) => (
             <div key={num}>
               <h3 className="text-[8px] font-bold uppercase tracking-widest opacity-40 mb-3">{num}. {title}</h3>
-              <div className={`p-5 font-mono text-[12px] border-b-2 border-[#141414] tracking-wide leading-relaxed ${
+              <div className={`px-5 py-4 text-[15px] border-b-2 border-[#141414] overflow-x-auto ${
                 dark ? 'bg-[#141414] text-[#E4E3E0]' : 'bg-[#f3f3f1]'
               }`}>
-                {eq}
+                <Tex tex={eq} />
               </div>
               <p className="text-[10px] text-gray-500 mt-2.5 leading-relaxed">{note}</p>
             </div>
@@ -675,6 +692,14 @@ function EquationView({ a_st, tau }: { a_st: number; tau: number }) {
       </div>
     </div>
   );
+}
+
+function Tex({ tex }: { tex: string }) {
+  const html = useMemo(
+    () => katex.renderToString(tex, { displayMode: true, throwOnError: false }),
+    [tex],
+  );
+  return <div dangerouslySetInnerHTML={{ __html: html }} />;
 }
 
 // ─── Pathway View ─────────────────────────────────────────────────────────────
