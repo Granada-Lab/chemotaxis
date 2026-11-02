@@ -207,9 +207,9 @@ export default function Dashboard() {
     params.cheBSelectivity > 0.3 ? 'Partial Adaptation' : 'Fine-tuned (Breaks)';
 
   return (
-    <div className="flex flex-col h-screen bg-[#E4E3E0] text-[#141414] font-sans select-none">
+    <div className="flex flex-col min-h-screen md:h-screen bg-[#E4E3E0] text-[#141414] font-sans select-none">
       {/* ── Header ── */}
-      <header className="flex items-center justify-between px-6 py-3 border-b border-[#141414] shrink-0">
+      <header className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 px-4 md:px-6 py-3 border-b border-[#141414] shrink-0">
         <div className="flex items-center gap-3">
           <div className="bg-[#141414] p-1.5 text-[#E4E3E0] rounded-sm"><Dna size={22} /></div>
           <div>
@@ -222,11 +222,11 @@ export default function Dashboard() {
           </div>
         </div>
 
-        <nav className="flex gap-1 bg-[#d4d3d0] p-1 rounded-sm">
-          {([['sim', 'Simulation', Microscope], ['math', 'Equations', Calculator], ['pathway', 'Pathway', Network], ['details', 'Simulation Details', Info]] as const).map(
+        <nav className="order-last md:order-none w-full md:w-auto flex gap-1 bg-[#d4d3d0] p-1 rounded-sm overflow-x-auto">
+          {([['sim', 'Simulation', Microscope], ['math', 'Equations', Calculator], ['pathway', 'Pathway', Network], ['details', 'Details', Info]] as const).map(
             ([id, label, Icon]) => (
               <button key={id} onClick={() => setActiveTab(id)}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-sm text-xs font-medium transition-all ${
+                className={`flex shrink-0 items-center gap-1.5 whitespace-nowrap px-2 md:px-3 py-1.5 rounded-sm text-[11px] md:text-xs font-medium transition-all ${
                   activeTab === id ? 'bg-[#141414] text-[#E4E3E0]' : 'hover:bg-[#c4c3c0] text-[#141414]/50 hover:text-[#141414]'}`}>
                 <Icon size={12} />{label}
               </button>
@@ -234,7 +234,7 @@ export default function Dashboard() {
           )}
         </nav>
 
-        <div className="flex items-center gap-4">
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
           <button onClick={() => setIsPlaying(v => !v)}
             className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider underline underline-offset-4 decoration-2">
             {isPlaying ? <Pause size={13} /> : <Play size={13} />}
@@ -255,9 +255,9 @@ export default function Dashboard() {
         </div>
       </header>
 
-      <main className="flex-1 flex overflow-hidden">
+      <main className="flex-1 flex flex-col md:flex-row md:overflow-hidden">
         {/* ── Left Sidebar ── */}
-        <aside className="border-r border-[#141414] bg-[#EBEAE7] overflow-y-auto flex flex-col shrink-0" style={{ width: '270px' }}>
+        <aside className="order-2 md:order-none w-full md:w-[270px] border-t md:border-t-0 md:border-r border-[#141414] bg-[#EBEAE7] md:overflow-y-auto flex flex-col shrink-0">
           <div className="p-5 border-b border-[#141414] space-y-5">
             <div className="flex items-center gap-2">
               <Settings size={12} className="opacity-40" />
@@ -439,11 +439,11 @@ export default function Dashboard() {
         </aside>
 
         {/* ── Content ── */}
-        <section className="flex-1 flex flex-col overflow-hidden">
+        <section className="order-1 md:order-none flex-1 flex flex-col md:overflow-hidden">
           {activeTab === 'sim' && (
-            <div className="relative flex-1 flex flex-col bg-[#fafafa] overflow-hidden">
+            <div className="relative md:flex-1 flex flex-col bg-[#fafafa] overflow-hidden">
               {/* Ensemble bias overlay */}
-              <div className="absolute top-4 right-4 z-10 w-[312px] bg-[#fffdf8] border-2 border-[#141414] p-3 shadow-[6px_6px_0px_rgba(0,0,0,0.12)]" style={{ height: '210px' }}>
+              <div className="order-2 md:order-none m-3 md:m-0 md:absolute md:top-4 md:right-4 z-10 md:w-[312px] h-[210px] bg-[#fffdf8] border-2 border-[#141414] p-3 shadow-[6px_6px_0px_rgba(0,0,0,0.12)]">
                 <div className="flex justify-between items-center mb-1">
                   <div className="flex items-center gap-1">
                     <Waves size={9} className="text-blue-600" />
@@ -463,12 +463,12 @@ export default function Dashboard() {
                   </ResponsiveContainer>
                 </div>
                 <p className="text-[7px] text-center italic text-black/60 uppercase mt-1">
-                  Baseline = 1.0 s⁻¹ · change uniform background on left for exact adaptation
+                  Baseline = 1.0 s⁻¹ · change uniform background in the controls for exact adaptation
                 </p>
               </div>
 
               {/* Canvas interaction hints */}
-              <div className="absolute top-4 left-4 z-10 pointer-events-none space-y-1.5">
+              <div className="hidden md:block absolute top-4 left-4 z-10 pointer-events-none space-y-1.5">
                 <span className="text-[7px] font-bold uppercase tracking-widest text-black/65 block">Canvas</span>
                 {params.uniformBackground > 0 && (
                   <div className="flex items-center gap-2">
@@ -496,7 +496,7 @@ export default function Dashboard() {
                 </p>
               </div>
 
-              <div className="absolute bottom-12 left-4 z-10 pointer-events-none rounded-sm border-2 border-[#14141455] bg-[#fffdf8] px-3 py-2 shadow-[4px_4px_0px_rgba(0,0,0,0.08)]">
+              <div className="hidden md:block absolute bottom-12 left-4 z-10 pointer-events-none rounded-sm border-2 border-[#14141455] bg-[#fffdf8] px-3 py-2 shadow-[4px_4px_0px_rgba(0,0,0,0.08)]">
                 <div className="mb-1 flex items-center gap-2">
                   <span className="block h-[2px] w-[40px] bg-[#141414]" />
                   <span className="text-[8px] font-mono uppercase text-black/80">{SCALE_BAR_UM} µm</span>
@@ -507,11 +507,11 @@ export default function Dashboard() {
               </div>
 
               <canvas ref={canvasRef} width={SIM_W} height={SIM_H}
-                className="flex-1 w-full h-full cursor-crosshair" onClick={handleClick} />
+                className="order-1 md:order-none w-full aspect-[2/1] md:aspect-auto md:flex-1 md:h-full cursor-crosshair" onClick={handleClick} />
 
               {/* Status bar */}
-              <div className="h-11 border-t-2 border-[#141414] flex items-center justify-between px-4 bg-[#d9d7d0] text-[9px] font-mono shrink-0">
-                <div className="flex gap-5">
+              <div className="order-3 md:order-none md:h-11 border-t-2 border-[#141414] flex flex-wrap items-center justify-between gap-y-1 px-4 py-2 md:py-0 bg-[#d9d7d0] text-[9px] font-mono shrink-0">
+                <div className="flex flex-wrap gap-x-5 gap-y-1">
                   <span><span className="font-bold opacity-50 uppercase">N: </span>{bacteria.length}</span>
                   <span><span className="font-bold opacity-50 uppercase">Run: </span>{runCount}/{bacteria.length}</span>
                   <span><span className="font-bold opacity-50 uppercase">⟨a⟩: </span>{meanActivity.toFixed(3)}</span>
@@ -522,7 +522,7 @@ export default function Dashboard() {
                   <span className={`font-bold uppercase ${betaColor}`}>β={params.cheBSelectivity.toFixed(1)}</span>
                   <span className={`font-bold uppercase ${motionColor}`}>{params.chemicalMode}</span>
                 </div>
-                <div className="flex items-center gap-5">
+                <div className="flex flex-wrap items-center gap-x-5 gap-y-1">
                   <span className="flex items-center gap-1.5">
                     <span className="w-2 h-2 rounded-full bg-green-500 inline-block" />
                     <span className="text-green-700 font-bold">RUN (CCW)</span>
@@ -532,7 +532,7 @@ export default function Dashboard() {
                     <span className="text-orange-700 font-bold">TUMBLE (CW)</span>
                   </span>
                   <span className="border-l-2 border-black/40 pl-4 text-[9.6px] font-black uppercase tracking-[0.18em] text-black/85">
-                    Adrián E. Granada · <a href="https://granada-lab.github.io/" className="hover:underline">Granada Lab</a> · <a href="https://granadalab.org" target="_blank" rel="noopener noreferrer" className="hover:underline">granadalab.org</a> | Version 1.3
+                    Adrián E. Granada · <a href="https://granada-lab.github.io/" className="hover:underline">Granada Lab</a> · <a href="https://granadalab.org" target="_blank" rel="noopener noreferrer" className="hover:underline">granadalab.org</a> | Version 1.4
                   </span>
                 </div>
               </div>
@@ -661,7 +661,7 @@ function EquationView({ a_st, tau }: { a_st: number; tau: number }) {
   ] as { num: string; title: string; eq: string; note: string; dark?: boolean }[];
 
   return (
-    <div className="p-10 h-full overflow-y-auto bg-white">
+    <div className="p-5 md:p-10 h-full overflow-y-auto bg-white">
       <div className="max-w-3xl mx-auto">
         <div className="mb-10 border-l-4 border-[#141414] pl-5 py-1">
           <h2 className="text-2xl font-bold uppercase tracking-tight">Barkai-Leibler Chemotaxis Model</h2>
@@ -715,7 +715,7 @@ function Tex({ tex }: { tex: string }) {
 
 function PathwayView() {
   return (
-    <div className="p-10 h-full overflow-y-auto bg-white flex justify-center">
+    <div className="p-5 md:p-10 h-full overflow-y-auto bg-white flex justify-center">
       <div className="max-w-lg w-full">
         <h2 className="text-[8px] font-bold uppercase tracking-widest opacity-35 mb-10 text-center">
           Barkai-Leibler Circuit · E. coli Chemotaxis
@@ -734,7 +734,7 @@ function PathwayView() {
           </PBox>
 
           {/* Adaptation module — CheR/CheB */}
-          <div className="flex items-start gap-0 w-full justify-center mt-2">
+          <div className="flex flex-col md:flex-row items-center md:items-start gap-0 w-full justify-center mt-2">
             <div className="flex flex-col items-center">
               <Arrow />
 
@@ -757,7 +757,7 @@ function PathwayView() {
             </div>
 
             {/* Side: adaptation module */}
-            <div className="flex flex-col gap-4 ml-8 mt-12">
+            <div className="flex flex-col gap-4 mt-8 md:ml-8 md:mt-12">
               <div className="border-l-2 border-red-400 pl-3 py-1 max-w-[140px]">
                 <p className="text-[8px] font-bold text-red-700">CheR (R)</p>
                 <p className="text-[7px] opacity-60 leading-snug mt-0.5">
@@ -842,7 +842,7 @@ function SimulationDetailsView() {
   ];
 
   return (
-    <div className="p-10 h-full overflow-y-auto bg-[#fcfbf7]">
+    <div className="p-5 md:p-10 h-full overflow-y-auto bg-[#fcfbf7]">
       <div className="max-w-4xl mx-auto">
         <div className="mb-8 border-l-4 border-[#141414] pl-5 py-1">
           <h2 className="text-2xl font-bold uppercase tracking-tight">Simulation Details</h2>

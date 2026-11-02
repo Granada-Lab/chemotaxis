@@ -2,8 +2,8 @@ cff-version: 1.3.0
 message: "If you use this simulator in teaching or research, please cite it as below."
 title: "Teaching Bacterial Chemotaxis: an interactive simulator of E. coli chemotaxis"
 type: software
-version: 1.3.0
-date-released: 2026-10-26
+version: 1.4.0
+date-released: 2026-11-02
 license: MIT
 repository-code: "https://github.com/Granada-Lab/chemotaxis"
 url: "https://granada-lab.github.io/chemotaxis/"
