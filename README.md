@@ -2,7 +2,7 @@
 
 An interactive browser simulator of *E. coli* chemotaxis for teaching: receptor activity, Barkai-Leibler methylation dynamics, exact adaptation and run-and-tumble motility.
 
-**Open it online:** https://granada-lab.github.io/chemotaxis/
+**Open it online:** https://granada-lab.github.io/chemotaxis/ (works on desktop, tablets and phones)
 
 Students change parameters (CheR and CheB rates, Hill coefficient, CheB selectivity, background and gradient) and watch individual cells and the population adapt in real time. Setting the CheB selectivity from 1 to 0 switches from the robust Barkai-Leibler circuit to a fine-tuned one, where exact adaptation breaks. A built-in tab shows the equations behind each panel.
 
